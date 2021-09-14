@@ -10,7 +10,7 @@
 /// @param $type string, optional, selector of the children, default '=' 
 /// value accepted '=', '=='(same as '=') , '<', '<=', '>', '>=', '!=', 'odd', 'even'
 /// if 'odd' or 'even', $nb is ignored
-/// @param $strict-direct-childs bool, optional, the elements must be direct children, default true
+/// @param $strict-direct-childs bool, optional, the elements must be a direct children, default true
 ///
 /// @example
 /// @include quantity-query( 7, 'ul', 'li', '>=') {
