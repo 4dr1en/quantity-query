@@ -1,0 +1,56 @@
+/// Build a quantity query
+///
+/// @author adrien Charrier <adrien.cahrrier@outlook.fr>
+/// 
+/// @content list of rules css
+///
+/// @param $nb number, number of elements html
+/// @param $parent-selector string, selector css of the parent
+/// @param $selector string, optional, selector of the children, default '*' 
+/// @param $type string, optional, selector of the children, default '=' 
+/// value accepted '=', '=='(same as '=') , '<', '<=', '>', '>=', '!=', 'odd', 'even'
+/// if 'odd' or 'even', $nb is ignored
+/// @param $strict-direct-childs bool, optional, the elements must be direct children, default true
+///
+/// @example
+/// @include quantity-query( 7, 'ul', 'li', '>=') {
+///     background-color: aqua;
+/// }
+///
+@mixin quantity-query($nb, $parent-selector, $selector: '*', $type: '=' , $strict-direct-childs: true) {
+    $css-operator: ' ';
+    @if($strict-direct-childs) {
+        $css-operator: '>';
+    }
+
+    $css-selector: null;
+    @if($type == '=' or $type == '==') {
+        $css-selector: ':first-child:nth-last-child(#{$nb})';
+    }
+    @else if($type == '>=') {
+        $css-selector: ':first-child:nth-last-child(1n+#{$nb})';
+    } 
+    @else if($type == '>') {
+        $css-selector: ':first-child:nth-last-child(1n+#{$nb+1})';
+    }
+    @else if($type == '<') {
+        $css-selector: ':first-child:not(:nth-last-child(1n+#{$nb}))';
+    }    
+    @else if($type == '<=') {
+        $css-selector: ':first-child:not(:nth-last-child(1n+#{$nb+1}))';
+    }
+    @else if($type == '!=') {
+        $css-selector: ':first-child:not(:nth-last-child(#{$nb}))';
+    }
+    @else if($type == 'even' or $type == 'odd') {
+        $css-selector: ':first-child:nth-last-child(#{$type})';
+    }
+    @else {
+        @error 'The type of operation "#{$type}" is invalid';
+    }
+
+    #{$parent-selector $css-operator $selector}#{$css-selector},
+    #{$parent-selector $css-operator $selector}#{$css-selector}~#{$selector} {
+        @content;
+    }
+}
