@@ -8,9 +8,8 @@
 /// @param $parent-selector string, selector css of the parent
 /// @param $selector string, optional, selector of the children, default '*' 
 /// @param $type string, optional, selector of the children, default '=' 
-/// value accepted '=', '=='(same as '=') , '<', '<=', '>', '>=', '!=', 'odd', 'even'
-/// if 'odd' or 'even', $nb is ignored
-/// @param $strict-direct-childs bool, optional, the elements must be a direct children, default true
+/// value accepted '=', '=='(same as '=') , '<', '<=', '>', '>=', '!='
+/// @param $strict-direct-childs bool, optional, the elements must be direct children, default true
 ///
 /// @example
 /// @include quantity-query( 7, 'ul', 'li', '>=') {
@@ -18,9 +17,9 @@
 /// }
 ///
 @mixin quantity-query($nb, $parent-selector, $selector: '*', $type: '=' , $strict-direct-childs: true) {
-    $css-operator: ' ';
+    $css-child-operator: ' ';
     @if($strict-direct-childs) {
-        $css-operator: '>';
+        $css-child-operator: '>';
     }
 
     $css-selector: null;
@@ -42,15 +41,12 @@
     @else if($type == '!=') {
         $css-selector: ':first-child:not(:nth-last-child(#{$nb}))';
     }
-    @else if($type == 'even' or $type == 'odd') {
-        $css-selector: ':first-child:nth-last-child(#{$type})';
-    }
     @else {
         @error 'The type of operation "#{$type}" is invalid';
     }
 
-    #{$parent-selector $css-operator $selector}#{$css-selector},
-    #{$parent-selector $css-operator $selector}#{$css-selector}~#{$selector} {
+    #{$parent-selector $css-child-operator $selector}#{$css-selector},
+    #{$parent-selector $css-child-operator $selector}#{$css-selector}~#{$selector} {
         @content;
     }
 }
